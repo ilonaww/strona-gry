@@ -17,9 +17,10 @@
 
 <body>
 
-<p>Lepszej gry żeś jeszcze nie widział. Hyżo podonżaj za mno! </p>
+<p><h2>Lepszej gry żeś jeszcze nie widział. Hyżo podonżaj za mno!</h2> </p>
 <br>
-<br>
+   <a href="rejestracja.php">Rejestracja </a>
+</br> </br>
 
 <form action="zaloguj.php" method="post">
 Login: </br><input type="text" name="login"></br>

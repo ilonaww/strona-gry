@@ -1,7 +1,7 @@
 <?php
  session_start();
 
-if((!isset($_POST['login'])) || (!isset($_POST['haslo'])))
+if(( !isset($_POST['login'])) || (!isset($_POST['haslo'])))
 {
     header('Location: index.php');
     exit();
@@ -19,10 +19,16 @@ else{
     $login = $_POST['login'];
     $haslo = $_POST['haslo'];
 
-    $sql = "SELECT * FROM uzytkownicy WHERE user='$login' AND pass='$haslo'";
+    $login = htmlentities($login, ENT_QUOTES);
+    
+    $haslo = htmlentities($haslo, ENT_QUOTES);
+
+    
  
     //wysyłanie zapytania do bazy 
-    if($rezultat = @$polaczenie->query($sql))
+    if($rezultat = @$polaczenie->query(sprintf("SELECT * FROM uzytkownicy WHERE user='%s' AND pass='%s'",
+    mysqli_real_escape_string($polaczenie,$login),
+    mysqli_real_escape_string($polaczenie,$haslo))))
  //query jest tu medotą obiektu $polaczenie
  //ten if jest po to, że gdy w zapytaniu będzie literówka to zmienna $rezultat przyjmie wartość false i ten if się nie spełni
  //sprawdzamy teraz ile rekordów nam zwróci zapytanie: 1 czy 0
