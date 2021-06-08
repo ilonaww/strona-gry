@@ -14,7 +14,7 @@
             $wszystko_ok = false;
             $_SESSION['e_nick'] = "Nick musi posiadać od 3 do 20 znaków.";
         }
-
+ 
         if(ctype_alnum($nick) == false)
         {
             $wszystko_ok = false;
@@ -41,6 +41,41 @@
             $_SESSION['e_haslo'] = "Hasło musi posiadać od 8 do 20 znaków.";
         }
 
+        if($haslo1 != $haslo2)
+        {
+            $wszystko_ok = false;
+            $_SESSION['e_haslo'] = "Podane hasła nie są identyczne.";
+        }
+
+        $haslo_hash = password_hash($haslo1, PASSWORD_DEFAULT);
+
+        //czy zakceptowano regulamin
+        if(!isset($_POST['regulamin']))
+         {
+            $wszystko_ok = false;
+            $_SESSION['e_haslo'] = "Nie zaakceptowano regulaminu.";
+         }
+
+         //sprawdzenie czy uzytkownik to robot
+         $sekret = "6LcEhgUbAAAAAJYzycrM5MTQvAim9uNsmeHotE4c";
+         $sprawdz = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$sekret.'&response='.$_POST['g-recaptcha-response']);
+
+         $odpowiedz= json_decode($sprawdz);
+         if($odpowiedz->success==false)
+         {
+            $wszystko_ok = false;
+            $_SESSION['e_bot'] = "Potwierdź że nie jesteś botem.";
+         }
+
+         require_once('connect.php');
+         try{
+            $polaczenie = new mysqli($host,$db_user,$db_password, $db_name);
+         }
+         catch(Exception $e)
+         {
+             echo '<span style="color:red">Błąd serwera. Posimy o rejestracje w innym terminie</span>';
+             echo '</br> Informacja developerska' . $e;
+         }
 
 
 
@@ -93,18 +128,33 @@
                         unset($_SESSION['e_email']);
                     }
                 ?>
-            Hasło: </br> <input name="haslo1" type="password"/> </br>
+            Hasło: </br> <input name="haslo1" type="password"> </br>
 
             <?php
                 if(isset($_SESSION['e_haslo']))
                 {
                     echo '<div class = "error">' . $_SESSION['e_haslo'] . '</div>';
+                    unset($_SESSION['e_haslo']);
                 }
             ?>
             Powtórz Hasło: </br> <input name="haslo2" type="password"> </br>
             <label><input type="checkbox" name="regulamin"> Akceptuję regulamin</label> </br>
+            <?php
+                if(isset($_SESSION['e_regulamin']))
+                {
+                    echo '<div class = "error">' . $_SESSION['e_regulamin'] . '</div>';
+                    unset($_SESSION['e_regulamin']);
+                }
+            ?>
             <!-- dodanie pola o nie byciu robotem-->
             <div class="g-recaptcha" data-sitekey="6LcEhgUbAAAAAKh8JRQ5Pp1PNsniQcYcM6SFIIFw"></div>
+            <?php
+                if(isset($_SESSION['e_bot']))
+                {
+                    echo '<div class = "error">' . $_SESSION['e_bot'] . '</div>';
+                    unset($_SESSION['e_bot']);
+                }
+            ?>
             </br>
             <input type="submit" value="Zarejestruj się">
          </form>
