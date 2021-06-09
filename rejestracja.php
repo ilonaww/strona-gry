@@ -53,7 +53,7 @@
         if(!isset($_POST['regulamin']))
          {
             $wszystko_ok = false;
-            $_SESSION['e_haslo'] = "Nie zaakceptowano regulaminu.";
+            $_SESSION['e_regulamin'] = "Nie zaakceptowano regulaminu.";
          }
 
          //sprawdzenie czy uzytkownik to robot
@@ -68,24 +68,59 @@
          }
 
          require_once('connect.php');
-         try{
+
+         //ustawienie sposobu raportowania błędów, które od teraz ma być oparte o wyjątki a nie o ostrzeżenia 
+         mysqli_report(MYSQLI_REPORT_STRICT);
+         try
+          {
             $polaczenie = new mysqli($host,$db_user,$db_password, $db_name);
+
+            if($polaczenie->connect_errno != 0)
+            {
+                throw new Exception(mysqli_connect_errno());
+            }
+            else //połączenie sie udało
+            {
+                //sprawdzenie czy email już istnieje
+                $rezultat = $polaczenie->query("SELECT id FROM uzytkownicy WHERE email='$email'");
+
+                if(!$rezultat) throw new Exception($polaczenie->error);
+
+                $ile_maili = $rezultat->num_rows;
+                if($ile_maili > 0)
+                {
+                    $wszystko_ok = false;
+                    $_SESSION['e_email'] = "Istnieje już konto przypisane do tego adresu email";
+                }
+                     //sprawdzenie czy nick już istnieje
+                $rezultat = $polaczenie->query("SELECT id FROM uzytkownicy WHERE user='$nick'");
+
+                if(!$rezultat) throw new Exception($polaczenie->error);
+
+                $ile_nickow = $rezultat->num_rows;
+                if($ile_nickow > 0)
+                {
+                    $wszystko_ok = false;
+                    $_SESSION['e_nick'] = "Istnieje już gracz o takim nicku. Wybierz inny.";
+                }
+
+                if($wszystko_ok == true)
+                {
+                    //Testy zaliczone
+                   
+                    exit();
+                }
+
+                $polaczenie->close();
+            }
          }
-         catch(Exception $e)
+            catch(Exception $e)
          {
              echo '<span style="color:red">Błąd serwera. Posimy o rejestracje w innym terminie</span>';
              echo '</br> Informacja developerska' . $e;
          }
 
-
-
-        if($wszystko_ok == true)
-        {
-            //Testy zaliczone
-            echo "udana walidacja";
-            exit();
-        }
-         
+  
     }
 ?>
 
