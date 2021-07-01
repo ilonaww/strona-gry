@@ -51,6 +51,7 @@
 
 		$haslo_hash = password_hash($haslo1, PASSWORD_DEFAULT);
 		
+		
 		//czy zaakceptowano regulamin
 		if (!isset($_POST['regulamin']))
 		{
@@ -119,7 +120,7 @@
 				{
 					//Testy zaliczone
 					
-					if ($polaczenie->query("INSERT INTO uzytkownicy VALUES (NULL, '$nick', '$haslo_hash', '$email', 100, 100, 100, 14)"))
+					if ($polaczenie->query("INSERT INTO uzytkownicy VALUES (NULL, '$nick', '$haslo_hash', '$email', 100, 100, 100, now() + INTERVAL 14 DAY)"))
 					{
 						$_SESSION['udanarejestracja']=true;
 						header('Location: witamy.php');
@@ -130,7 +131,7 @@
 					}
 					
 				}
-				
+				 
 				$polaczenie->close();
 			}
 			

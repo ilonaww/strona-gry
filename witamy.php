@@ -34,14 +34,17 @@
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title>Osadnicy - gra przeglądarkowa</title>
+	<link rel="stylesheet" href="style.css" type="text/css">
 </head>
 
 <body>
+	<div id="container">
 	
-	Dziękujemy za rejestrację w serwisie! Możesz już zalogować się na swoje konto!<br /><br />
-	
-	<a href="index.php">Zaloguj się na swoje konto!</a>
-	<br /><br />
-
+		<h2>Dziękujemy za rejestrację w serwisie! Możesz już zalogować się na swoje konto!</h2>
+		<br /><br />
+		
+		<a href="index.php">Zaloguj się na swoje konto!</a>
+		<br /><br />
+	</div>
 </body>
 </html>
