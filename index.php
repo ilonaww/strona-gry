@@ -3,7 +3,7 @@
     if((isset($_SESSION['zalogowany'])) && ($_SESSION['zalogowany']== true)){
         header('Location:gra.php'); 
         exit();
-    } //domyślnie najpierw przeglądarka wykona cały kod na tej stronie czego my nie chcemy. Aby temu przeciwdziałać dodajemy:
+    } 
     
 
 ?>
